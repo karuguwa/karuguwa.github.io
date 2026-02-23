@@ -3,10 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karuguwa Village</title>
+    <title>Karuguwa Village - アプリ開発</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+        header {
+            background: #fff;
+            text-align: center;
+            padding: 48px 20px 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        header p {
+            margin-top: 8px;
+            color: #6e6e73;
+            font-size: 15px;
+        }
+        main {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .app-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .app-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            flex-shrink: 0;
+        }
+        .app-info h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .app-info .category {
+            color: #6e6e73;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+        .app-desc {
+            font-size: 14px;
+            color: #424245;
+            margin-bottom: 16px;
+        }
+        .app-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .app-links a {
+            display: inline-block;
+            font-size: 14px;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: opacity 0.2s;
+        }
+        .app-links a:hover { opacity: 0.8; }
+        .btn-appstore {
+            background: #007aff;
+            color: #fff;
+        }
+        .btn-privacy {
+            background: #e8e8ed;
+            color: #1d1d1f;
+        }
+        .btn-googleplay {
+            background: #34a853;
+            color: #fff;
+        }
+        .btn-disabled {
+            background: #d1d1d6;
+            color: #8e8e93;
+            pointer-events: none;
+            cursor: default;
+        }
+        .coming-soon {
+            font-size: 12px;
+            color: #8e8e93;
+            margin-left: 4px;
+        }
+        footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: #6e6e73;
+            font-size: 13px;
+            border-top: 1px solid #e0e0e0;
+        }
+        footer a {
+            color: #007aff;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Karuguwa Village</h1>
-    <p>アプリ開発者ページ</p>
+    <header>
+        <h1>Karuguwa Village</h1>
+        <p>アプリ開発</p>
+    </header>
+    <main>
+        <h2>Apps</h2>
+
+        <div class="app-card">
+            <div class="app-header">
+                <img class="app-icon"
+                     src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/53/cd/c4/53cdc4b2-4a5b-32bb-0dcb-efa1c512b46f/AppIcon-1x_U007ephone-0-1-85-220-0.png/512x512bb.jpg"
+                     alt="英単語定着アプリ アイコン">
+                <div class="app-info">
+                    <h3>英単語定着アプリ</h3>
+                    <div class="category">教育 / 英語学習</div>
+                </div>
+            </div>
+            <p class="app-desc">
+                覚えた単語・覚えられなかった単語をワンタップで仕分け。覚えられなかった単語は復習リストに自動追加され、繰り返し学習で確実に定着。小学〜TOEIC対策まで4カテゴリ・約5,000語を収録。
+            </p>
+            <div class="app-links">
+                <a class="btn-appstore" href="https://apps.apple.com/jp/app/id6759252783">App Store</a>
+                <span class="btn-disabled" style="display:inline-block;font-size:14px;padding:8px 16px;border-radius:8px;">Google Play<span class="coming-soon">(準備中)</span></span>
+                <a class="btn-privacy" href="/eitango-privacy/">プライバシーポリシー</a>
+            </div>
+        </div>
+
+        <!-- 新しいアプリはここにapp-cardを追加 -->
+
+    </main>
+    <footer>
+        <p>お問い合わせ: <a href="mailto:karuguwa@gmail.com">karuguwa@gmail.com</a></p>
+        <p style="margin-top: 8px;">&copy; 2024 Karuguwa Village</p>
+    </footer>
 </body>
 </html>

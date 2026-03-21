@@ -3,128 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karuguwa Village - App Development</title>
+    <title>Karuguwa Lab - App Development</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
-            background: #f5f5f7;
-            color: #1d1d1f;
+            background: #0a0a1a;
+            color: #e0e0e8;
             line-height: 1.6;
         }
+
+        /* 背景グリッド */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* スキャンライン */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.08) 2px,
+                rgba(0, 0, 0, 0.08) 4px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ===== ヘッダー ===== */
         header {
-            background: #fff;
+            position: relative;
             text-align: center;
-            padding: 48px 20px 40px;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 0;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            overflow: hidden;
+            height: 360px;
         }
-        header h1 {
-            font-size: 28px;
+
+        #cityCanvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .header-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -65%);
+            z-index: 10;
+        }
+
+        .neon-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 40px;
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 4px;
+            color: #fff;
+            text-shadow:
+                0 0 2px #fff,
+                0 0 6px rgba(0, 240, 255, 0.6),
+                0 0 15px rgba(0, 240, 255, 0.3),
+                0 0 30px rgba(0, 240, 255, 0.15);
+            animation: neon-flicker 4s ease-in-out forwards, neon-breathe 3s ease-in-out 4s infinite;
         }
-        header p {
-            margin-top: 8px;
-            color: #6e6e73;
-            font-size: 15px;
+
+        @keyframes neon-flicker {
+            0% { opacity: 0; }
+            3% { opacity: 0.8; }
+            6% { opacity: 0.3; }
+            9% { opacity: 0.9; }
+            11% { opacity: 0.4; }
+            14% { opacity: 1; }
+            18% { opacity: 0.2; }
+            20% { opacity: 1; }
+            25% { opacity: 0.7; }
+            30% { opacity: 1; }
+            50% { opacity: 0.9; }
+            55% { opacity: 1; }
+            70% { opacity: 0.95; }
+            100% { opacity: 1; }
         }
+
+        @keyframes neon-breathe {
+            0%, 100% {
+                text-shadow:
+                    0 0 2px #fff,
+                    0 0 6px rgba(0, 240, 255, 0.6),
+                    0 0 15px rgba(0, 240, 255, 0.3),
+                    0 0 30px rgba(0, 240, 255, 0.15);
+            }
+            50% {
+                text-shadow:
+                    0 0 2px #fff,
+                    0 0 4px rgba(0, 240, 255, 0.4),
+                    0 0 10px rgba(0, 240, 255, 0.2),
+                    0 0 20px rgba(0, 240, 255, 0.1);
+            }
+        }
+
+        header .subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            margin-top: 12px;
+            color: #ff00aa;
+            font-size: 14px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            text-shadow:
+                0 0 7px #ff00aa,
+                0 0 20px #ff00aa,
+                0 0 40px #ff00aa;
+            opacity: 0;
+            animation: fade-in 1.5s ease-out 3s forwards;
+        }
+
+        @keyframes fade-in {
+            to { opacity: 0.9; }
+        }
+
+        /* ===== メインコンテンツ ===== */
         main {
+            position: relative;
+            z-index: 1;
             max-width: 640px;
             margin: 0 auto;
             padding: 32px 20px;
         }
+
         h2 {
-            font-size: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 18px;
             font-weight: 600;
             margin-bottom: 16px;
+            color: #00f0ff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
         }
+
         .app-card {
-            background: #fff;
-            border-radius: 16px;
+            background: rgba(15, 15, 35, 0.8);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            border-radius: 12px;
             padding: 24px;
             margin-bottom: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            backdrop-filter: blur(10px);
+            transition: border-color 0.3s, box-shadow 0.3s, opacity 0.6s, transform 0.6s;
         }
+
+        .app-card:hover {
+            border-color: rgba(0, 240, 255, 0.4);
+            box-shadow:
+                0 0 15px rgba(0, 240, 255, 0.1),
+                inset 0 0 15px rgba(0, 240, 255, 0.03);
+        }
+
         .app-header {
             display: flex;
             align-items: center;
             gap: 16px;
             margin-bottom: 16px;
         }
+
         .app-icon {
             width: 80px;
             height: 80px;
             border-radius: 18px;
             flex-shrink: 0;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            transition: box-shadow 0.3s, border-color 0.3s;
         }
+
+        .app-icon:hover {
+            border-color: rgba(0, 240, 255, 0.6);
+            box-shadow:
+                0 0 8px rgba(0, 240, 255, 0.4),
+                0 0 20px rgba(0, 240, 255, 0.2),
+                0 0 40px rgba(0, 240, 255, 0.1);
+        }
+
         .app-info h3 {
             font-size: 18px;
             font-weight: 600;
+            color: #ffffff;
         }
+
         .app-info .category {
-            color: #6e6e73;
+            color: #6e7a8a;
             font-size: 13px;
             margin-top: 2px;
+            font-family: 'Share Tech Mono', monospace;
         }
+
         .app-desc {
             font-size: 14px;
-            color: #424245;
+            color: #9a9ab0;
             margin-bottom: 16px;
         }
+
         .app-links {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
         }
+
         .app-links a {
             display: inline-block;
             font-size: 14px;
             text-decoration: none;
             padding: 8px 16px;
             border-radius: 8px;
-            transition: opacity 0.2s;
+            transition: box-shadow 0.3s, transform 0.2s;
+            font-family: 'Share Tech Mono', monospace;
         }
-        .app-links a:hover { opacity: 0.8; }
+
+        .app-links a:hover {
+            transform: translateY(-1px);
+        }
+
         .btn-appstore {
-            background: #007aff;
-            color: #fff;
+            background: transparent;
+            color: #00f0ff;
+            border: 1px solid #00f0ff;
         }
+
+        .btn-appstore:hover {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3), 0 0 30px rgba(0, 240, 255, 0.1);
+        }
+
         .btn-privacy {
-            background: #e8e8ed;
-            color: #1d1d1f;
+            background: transparent;
+            color: #9a9ab0;
+            border: 1px solid rgba(154, 154, 176, 0.3);
         }
+
+        .btn-privacy:hover {
+            border-color: rgba(154, 154, 176, 0.6);
+            box-shadow: 0 0 10px rgba(154, 154, 176, 0.1);
+        }
+
         .btn-googleplay {
-            background: #34a853;
-            color: #fff;
+            background: transparent;
+            color: #34a853;
+            border: 1px solid #34a853;
         }
+
         .btn-disabled {
-            background: #d1d1d6;
-            color: #8e8e93;
+            background: transparent;
+            color: #4a4a5a;
+            border: 1px solid rgba(74, 74, 90, 0.3);
             pointer-events: none;
             cursor: default;
         }
+
         .coming-soon {
             font-size: 12px;
-            color: #8e8e93;
+            color: #4a4a5a;
             margin-left: 4px;
         }
+
         footer {
+            position: relative;
+            z-index: 1;
             text-align: center;
             padding: 32px 20px;
-            color: #6e6e73;
+            color: #4a4a5a;
             font-size: 13px;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid rgba(0, 240, 255, 0.1);
+            font-family: 'Share Tech Mono', monospace;
         }
+
         footer a {
-            color: #007aff;
+            color: #00f0ff;
             text-decoration: none;
+        }
+
+        footer a:hover {
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+        }
+
+        @media (max-width: 480px) {
+            .neon-title { font-size: 24px; letter-spacing: 2px; }
+            header { height: 280px; }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Karuguwa Village</h1>
-        <p>App Development</p>
+        <canvas id="cityCanvas" width="800" height="360"></canvas>
+        <div class="header-content">
+            <h1 class="neon-title">Karuguwa Lab</h1>
+            <p class="subtitle">App Development</p>
+        </div>
     </header>
     <main>
         <h2>Apps</h2>
@@ -190,7 +374,335 @@
     </main>
     <footer>
         <p>Contact: <a href="mailto:karuguwa@gmail.com">karuguwa@gmail.com</a></p>
-        <p style="margin-top: 8px;">&copy; 2024-2026 Karuguwa Village</p>
+        <p style="margin-top: 8px;">&copy; 2024-2026 Karuguwa Lab</p>
     </footer>
+
+    <script>
+    (function() {
+        var canvas = document.getElementById('cityCanvas');
+        var ctx = canvas.getContext('2d');
+        var W, H;
+
+        function resize() {
+            W = canvas.parentElement.offsetWidth;
+            H = canvas.parentElement.offsetHeight;
+            canvas.width = W;
+            canvas.height = H;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        // ビル3レイヤー
+        var farBuildings = [];
+        var midBuildings = [];
+        var nearBuildings = [];
+
+        function makeBuildings(arr, minW, maxW, minH, maxH, gapMin, gapMax, layerIndex) {
+            arr.length = 0;
+            var x = -20;
+            while (x < W + 80) {
+                var bw = minW + Math.random() * (maxW - minW);
+                var bh = minH + Math.random() * (maxH - minH);
+                var winRows = Math.floor(bh / 18);
+                var winCols = Math.floor(bw / 14);
+                var windows = [];
+                for (var r = 0; r < winRows; r++) {
+                    for (var c = 0; c < winCols; c++) {
+                        windows.push({
+                            on: Math.random() > 0.4,
+                            color: Math.random() > 0.5 ? '#00f0ff' : (Math.random() > 0.5 ? '#ff00aa' : '#ffaa00'),
+                            brightness: 0.3 + Math.random() * 0.7
+                        });
+                    }
+                }
+                arr.push({ x: x, w: bw, h: bh, windows: windows, winRows: winRows, winCols: winCols });
+                x += bw + gapMin + Math.random() * (gapMax - gapMin);
+            }
+        }
+
+        function generateAll() {
+            makeBuildings(farBuildings, 20, 40, 40, H * 0.35, 10, 20, 0);
+            makeBuildings(midBuildings, 25, 50, 60, H * 0.5, 4, 10, 1);
+            makeBuildings(nearBuildings, 30, 65, 80, H * 0.6, 2, 8, 2);
+        }
+        generateAll();
+        window.addEventListener('resize', function() { resize(); generateAll(); });
+
+        // ライト
+        var lights = [];
+        function spawnLight() {
+            var y = H - 8 - Math.random() * 25;
+            var goRight = Math.random() > 0.5;
+            lights.push({
+                x: goRight ? -20 : W + 20,
+                y: y,
+                speed: (1.5 + Math.random() * 2.5) * (goRight ? 1 : -1),
+                color: goRight ? 'rgba(255, 200, 100, 0.8)' : 'rgba(255, 50, 50, 0.6)',
+                size: 2 + Math.random() * 2,
+                trail: goRight ? 'rgba(255, 200, 100, 0)' : 'rgba(255, 50, 50, 0)'
+            });
+        }
+
+        // パーティクル
+        var particles = [];
+        function spawnParticle() {
+            particles.push({
+                x: Math.random() * W,
+                y: Math.random() * H * 0.3,
+                vx: -0.2 + Math.random() * 0.4,
+                vy: 0.1 + Math.random() * 0.3,
+                life: 1,
+                decay: 0.003 + Math.random() * 0.005,
+                size: 1 + Math.random() * 2,
+                color: Math.random() > 0.5 ? '0, 240, 255' : '255, 0, 170'
+            });
+        }
+
+        // 雲
+        var clouds = [];
+        for (var ci = 0; ci < 4; ci++) {
+            clouds.push({
+                x: Math.random() * W,
+                y: 20 + Math.random() * 60,
+                w: 80 + Math.random() * 120,
+                h: 15 + Math.random() * 20,
+                speed: 0.1 + Math.random() * 0.2,
+                opacity: 0.03 + Math.random() * 0.04
+            });
+        }
+
+        var scrollY = 0;
+        window.addEventListener('scroll', function() { scrollY = window.scrollY; });
+
+        var frame = 0;
+
+        function drawBuildings(arr, layerOpacity, layerColor1, layerColor2, drawWindows, winSize, winSpacing, parallaxSpeed) {
+            var offset = scrollY * parallaxSpeed;
+            for (var i = 0; i < arr.length; i++) {
+                var b = arr[i];
+                var by = H - b.h + offset;
+
+                ctx.globalAlpha = layerOpacity;
+                var bGrad = ctx.createLinearGradient(b.x, by, b.x, H);
+                bGrad.addColorStop(0, layerColor1);
+                bGrad.addColorStop(1, layerColor2);
+                ctx.fillStyle = bGrad;
+                ctx.fillRect(b.x, by, b.w, b.h + 10);
+
+                ctx.strokeStyle = layerOpacity > 0.8 ? 'rgba(0, 240, 255, 0.08)' : 'rgba(0, 240, 255, 0.04)';
+                ctx.lineWidth = 0.5;
+                ctx.strokeRect(b.x, by, b.w, b.h);
+
+                if (drawWindows) {
+                    var padX = (b.w - b.winCols * winSpacing) / 2 + 4;
+                    var padY = 10;
+                    for (var r = 0; r < b.winRows; r++) {
+                        for (var c = 0; c < b.winCols; c++) {
+                            var win = b.windows[r * b.winCols + c];
+                            if (!win || !win.on) continue;
+                            var wx = b.x + padX + c * winSpacing;
+                            var wy = by + padY + r * 18;
+                            if (wy < 0 || wy > H) continue;
+
+                            if (Math.random() < 0.002) win.on = !win.on;
+                            var bright = win.brightness;
+                            if (Math.random() < 0.01) bright *= 0.3 + Math.random() * 0.7;
+
+                            ctx.globalAlpha = bright * 0.7 * layerOpacity;
+                            ctx.fillStyle = win.color;
+                            ctx.shadowColor = win.color;
+                            ctx.shadowBlur = winSize > 5 ? 4 : 2;
+                            ctx.fillRect(wx, wy, winSize, winSize + 2);
+                            ctx.shadowBlur = 0;
+                        }
+                    }
+                }
+
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+
+            // 夜空
+            var skyGrad = ctx.createLinearGradient(0, 0, 0, H);
+            skyGrad.addColorStop(0, '#05051a');
+            skyGrad.addColorStop(0.4, '#0a0a2e');
+            skyGrad.addColorStop(0.7, '#0f1035');
+            skyGrad.addColorStop(1, '#1a1040');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, W, H);
+
+            // 星
+            ctx.fillStyle = '#fff';
+            for (var i = 0; i < 50; i++) {
+                var sx = ((i * 137.5) % W);
+                var sy = ((i * 73.3) % (H * 0.4));
+                var ss = 0.5 + ((i * 17) % 3) * 0.5;
+                ctx.globalAlpha = 0.3 + 0.7 * Math.sin(frame * 0.02 + i * 1.7);
+                ctx.fillRect(sx, sy, ss, ss);
+            }
+            ctx.globalAlpha = 1;
+
+            // 月
+            var moonX = W * 0.82;
+            var moonY = H * 0.15;
+            var moonR = 25;
+            var moonGlow = ctx.createRadialGradient(moonX, moonY, moonR * 0.5, moonX, moonY, moonR * 4);
+            moonGlow.addColorStop(0, 'rgba(0, 240, 255, 0.08)');
+            moonGlow.addColorStop(0.5, 'rgba(0, 240, 255, 0.03)');
+            moonGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = moonGlow;
+            ctx.fillRect(moonX - moonR * 4, moonY - moonR * 4, moonR * 8, moonR * 8);
+            ctx.beginPath();
+            ctx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(200, 220, 255, 0.15)';
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(moonX, moonY, moonR, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(0, 240, 255, 0.2)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // 雲（ellipseの代わりにarcで楕円を近似）
+            for (var ci = 0; ci < clouds.length; ci++) {
+                var cl = clouds[ci];
+                ctx.globalAlpha = cl.opacity;
+                var cGrad = ctx.createRadialGradient(cl.x + cl.w / 2, cl.y, 0, cl.x + cl.w / 2, cl.y, cl.w / 2);
+                cGrad.addColorStop(0, 'rgba(100, 120, 180, 1)');
+                cGrad.addColorStop(1, 'rgba(100, 120, 180, 0)');
+                ctx.fillStyle = cGrad;
+                ctx.save();
+                ctx.translate(cl.x + cl.w / 2, cl.y);
+                ctx.scale(cl.w / cl.h, 1);
+                ctx.beginPath();
+                ctx.arc(0, 0, cl.h / 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                cl.x += cl.speed;
+                if (cl.x > W + cl.w) cl.x = -cl.w;
+            }
+            ctx.globalAlpha = 1;
+
+            // パーティクル
+            for (var pi = particles.length - 1; pi >= 0; pi--) {
+                var p = particles[pi];
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(' + p.color + ', ' + (p.life * 0.6) + ')';
+                ctx.shadowColor = 'rgba(' + p.color + ', ' + p.life + ')';
+                ctx.shadowBlur = 8;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= p.decay;
+                if (p.life <= 0) particles.splice(pi, 1);
+            }
+
+            // ビル描画（遠→近）
+            drawBuildings(farBuildings, 0.3, '#060612', '#050510', false, 0, 0, 0.15);
+            drawBuildings(midBuildings, 0.6, '#090918', '#07071a', true, 4, 10, 0.3);
+            drawBuildings(nearBuildings, 1, '#0c0c1e', '#08081a', true, 6, 14, 0);
+
+            // ウェット反射
+            var reflectH = 35;
+            ctx.save();
+            ctx.globalAlpha = 0.12;
+            ctx.translate(0, H);
+            ctx.scale(1, -1);
+            for (var ri = 0; ri < nearBuildings.length; ri++) {
+                var rb = nearBuildings[ri];
+                var rby = H - rb.h;
+                ctx.fillStyle = '#0c0c1e';
+                ctx.fillRect(rb.x, rby, rb.w, Math.min(reflectH, rb.h));
+                var rPadX = (rb.w - rb.winCols * 14) / 2 + 4;
+                for (var rr = 0; rr < Math.min(2, rb.winRows); rr++) {
+                    for (var rc = 0; rc < rb.winCols; rc++) {
+                        var rw = rb.windows[rr * rb.winCols + rc];
+                        if (!rw || !rw.on) continue;
+                        ctx.fillStyle = rw.color;
+                        ctx.globalAlpha = 0.06;
+                        ctx.fillRect(rb.x + rPadX + rc * 14, rby + 10 + rr * 18, 6, 8);
+                    }
+                }
+            }
+            ctx.restore();
+
+            // 地面グロー
+            var groundGrad = ctx.createLinearGradient(0, H - reflectH, 0, H);
+            groundGrad.addColorStop(0, 'rgba(0,0,0,0)');
+            groundGrad.addColorStop(0.5, 'rgba(0, 240, 255, 0.03)');
+            groundGrad.addColorStop(1, 'rgba(0, 240, 255, 0.06)');
+            ctx.fillStyle = groundGrad;
+            ctx.fillRect(0, H - reflectH, W, reflectH);
+
+            // ライト
+            for (var li = lights.length - 1; li >= 0; li--) {
+                var l = lights[li];
+                var trailGrad = ctx.createLinearGradient(l.x - l.speed * 15, l.y, l.x, l.y);
+                trailGrad.addColorStop(0, l.trail);
+                trailGrad.addColorStop(1, l.color);
+                ctx.strokeStyle = trailGrad;
+                ctx.lineWidth = l.size;
+                ctx.beginPath();
+                ctx.moveTo(l.x - l.speed * 15, l.y);
+                ctx.lineTo(l.x, l.y);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(l.x, l.y, l.size, 0, Math.PI * 2);
+                ctx.fillStyle = l.color;
+                ctx.shadowColor = l.color;
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                // 地面反射
+                ctx.beginPath();
+                ctx.arc(l.x, l.y + 6, l.size * 0.7, 0, Math.PI * 2);
+                ctx.globalAlpha = 0.2;
+                ctx.fillStyle = l.color;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+
+                l.x += l.speed;
+                if (l.x < -30 || l.x > W + 30) lights.splice(li, 1);
+            }
+
+            // スポーン
+            if (Math.random() < 0.03) spawnLight();
+            if (Math.random() < 0.05) spawnParticle();
+
+            frame++;
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+
+        // カード入場アニメーション
+        var cards = document.querySelectorAll('.app-card');
+        if ('IntersectionObserver' in window) {
+            // 初期状態を非表示に
+            for (var i = 0; i < cards.length; i++) {
+                cards[i].style.opacity = '0';
+                cards[i].style.transform = 'translateY(30px)';
+            }
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            for (var j = 0; j < cards.length; j++) {
+                observer.observe(cards[j]);
+            }
+        }
+    })();
+    </script>
 </body>
 </html>
